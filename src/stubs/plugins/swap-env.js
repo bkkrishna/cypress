@@ -1,6 +1,6 @@
-let fs = require('fs');
+import fs from 'fs';
 
-module.exports = {
+export default {
     activateCypressEnvFile() {
         if (fs.existsSync('.env.cypress')) {
             fs.renameSync('.env', '.env.backup');
@@ -17,5 +17,5 @@ module.exports = {
         }
 
         return null;
-    }
+    },
 };

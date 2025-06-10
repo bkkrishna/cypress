@@ -1,6 +1,6 @@
 {
     "name": "bkkrishna/cypress",
-    "description": "ESM Compatible Laravel Cypress Boilerplate",
+    "description": "ESM-compatible Laravel Cypress Boilerplate",
     "keywords": [
         "laracasts",
         "cypress"

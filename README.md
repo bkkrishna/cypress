@@ -26,7 +26,7 @@ npm install cypress --save-dev
 Now you're ready to install this package through Composer. Pull it in as a development-only dependency.
 
 ```bash
-composer require laracasts/cypress --dev
+composer require bkkrishna/cypress --dev
 ```
 
 Finally, run the `cypress:boilerplate` command to copy over the initial boilerplate files for your Cypress tests.
@@ -65,18 +65,18 @@ Once complete, of course the environment files will be reset to how they origina
 
 > All Cypress tests run according to the environment specified in `.env.cypress`.
 
-However, when your Cypress tests fail, it can often be useful to manually **browse your application in the exact state that triggered the test failure**. You can't do this if your environment is automatically reverted after each test run. 
+However, when your Cypress tests fail, it can often be useful to manually **browse your application in the exact state that triggered the test failure**. You can't do this if your environment is automatically reverted after each test run.
 
 To solve this, you have two choices:
 
 #### Option 1:
 
-Temporarily disable the Cypress task that resets the environment. Visit `cypress/support/index.js` and comment 
+Temporarily disable the Cypress task that resets the environment. Visit `cypress/support/index.js` and comment
 out this portion.
 
 ```js
 after(() => {
-  // cy.task("activateLocalEnvFile", {}, { log: false });
+    // cy.task("activateLocalEnvFile", {}, { log: false });
 });
 ```
 
@@ -114,7 +114,6 @@ Now from the command line, you can run `npm run test:cypress` to start a local s
 
 If you choose this second option, visit `cypress/support/index.js` and delete the `activateCypressEnvFile` and `activateLocalEnvFile` tasks, [as shown here](https://github.com/laracasts/cypress/blob/master/src/stubs/support/index.js#L23). They're no longer required, as you'll be handling the environment handling yourself.
 
-
 ## API
 
 This package will add a variety of commands to your Cypress workflow to make for a more familiar Laravel testing environment.
@@ -127,9 +126,9 @@ Find an existing user matching the optional attributes provided and set it as th
 
 ```js
 test('authenticated users can see the dashboard', () => {
-  cy.login({ username: 'JohnDoe' });
+    cy.login({ username: 'JohnDoe' });
 
-  cy.visit('/dashboard').contains('Welcome Back, JohnDoe!');
+    cy.visit('/dashboard').contains('Welcome Back, JohnDoe!');
 });
 ```
 
@@ -140,20 +139,20 @@ test('authenticated users can see the dashboard', () => {
     cy.login({
         attributes: { username: 'JohnDoe' },
         state: ['guest'],
-        load: ['profile']
+        load: ['profile'],
     });
 
     cy.visit('/dashboard').contains('Welcome Back, JohnDoe!');
 });
 ```
 
-If written in PHP, this object would effectively translate to: 
+If written in PHP, this object would effectively translate to:
 
 ```php
 $user = User::factory()->guest()->create([ 'username' => 'JohnDoe' ])->load('profile');
 
 auth()->login($user);
-````
+```
 
 ### cy.currentUser()
 
@@ -164,10 +163,10 @@ test('assert the current user has email', () => {
     cy.login({ email: 'joe@example.com' });
 
     cy.currentUser().its('email').should('eq', 'joe@example.com');
-    
+
     // or...
-    
-    cy.currentUser().then(user => {
+
+    cy.currentUser().then((user) => {
         expect(user.email).to.eql('joe@example.com');
     });
 });
@@ -179,11 +178,11 @@ Log out the currently authenticated user. Equivalent to Laravel's `auth()->logou
 
 ```js
 test('once a user logs out they cannot see the dashboard', () => {
-  cy.login({ username: 'JohnDoe' });
+    cy.login({ username: 'JohnDoe' });
 
-  cy.logout();
+    cy.logout();
 
-  cy.visit('/dashboard').assertRedirect('/login');
+    cy.visit('/dashboard').assertRedirect('/login');
 });
 ```
 
@@ -193,9 +192,9 @@ Use Laravel factories to create and persist a new Eloquent record.
 
 ```js
 test('it shows blog posts', () => {
-  cy.create('App\\Post', { title: 'My First Post' });
+    cy.create('App\\Post', { title: 'My First Post' });
 
-  cy.visit('/posts').contains('My First Post');
+    cy.visit('/posts').contains('My First Post');
 });
 ```
 
@@ -209,7 +208,7 @@ You may optionally specify the number of records you require as the second argum
 
 ```js
 test('it shows blog posts', () => {
-  cy.create('App\\Post', 3, { title: 'My First Post' });
+    cy.create('App\\Post', 3, { title: 'My First Post' });
 });
 ```
 
@@ -222,8 +221,8 @@ test('it shows blog posts', () => {
         attributes: { title: 'My First Post' },
         state: ['archived'],
         load: ['author'],
-        count: 10
-    })
+        count: 10,
+    });
 });
 ```
 
@@ -233,7 +232,7 @@ If written in PHP, this object would effectively translate to:
 $user = \App\Post::factory(10)->archived()->create([ 'title' => 'My First Post' ])->load('author');
 
 auth()->login($user);
-````
+```
 
 ### cy.refreshRoutes()
 
@@ -253,12 +252,12 @@ before each new test, your database is freshly migrated and cleaned up.
 
 ```js
 beforeEach(() => {
-  cy.refreshDatabase();
+    cy.refreshDatabase();
 });
 
 test('it does something', () => {
-  // php artisan migrate:fresh has been
-  // called at this point.
+    // php artisan migrate:fresh has been
+    // called at this point.
 });
 ```
 
@@ -268,7 +267,7 @@ Run all database seeders, or a single class, in the current Cypress environment.
 
 ```js
 test('it seeds the db', () => {
-  cy.seed('PlansTableSeeder');
+    cy.seed('PlansTableSeeder');
 });
 ```
 
@@ -284,11 +283,11 @@ Trigger any Artisan command under the current environment for the Cypress test. 
 
 ```js
 test('it can create posts through the command line', () => {
-  cy.artisan('post:make', {
-    '--title': 'My First Post',
-  });
+    cy.artisan('post:make', {
+        '--title': 'My First Post',
+    });
 
-  cy.visit('/posts').contains('My First Post');
+    cy.visit('/posts').contains('My First Post');
 });
 ```
 
@@ -304,15 +303,17 @@ While not exactly in the spirit of acceptance testing, this command will allow y
 
 ```js
 test('it can evaluate PHP', () => {
-    cy.php(`
+    cy.php(
+        `
         App\\Plan::first();
-    `).then(plan => {
-        expect(plan.name).to.equal('Monthly'); 
+    `,
+    ).then((plan) => {
+        expect(plan.name).to.equal('Monthly');
     });
 });
 ```
 
-Be thoughtful when you reach for this command, but it might prove useful in instances where it's vital that you verify the state of the application or database in response to a certain action. It could also be used 
+Be thoughtful when you reach for this command, but it might prove useful in instances where it's vital that you verify the state of the application or database in response to a certain action. It could also be used
 for setting up the "world" for your test. That said, a targeted database seeder - using `cy.seed()` - will typically be the better approach.
 
 ## Routing
@@ -325,7 +326,7 @@ This package overrides the base `cy.visit()` method to allow for optionally pass
 ```js
 test('it loads the about page using a named route', () => {
     cy.visit({
-        route: 'about'
+        route: 'about',
     });
 });
 ```
@@ -336,7 +337,7 @@ If the named route requires a wildcard, you may include it using the `parameters
 test('it loads the team dashboard page using a named route', () => {
     cy.visit({
         route: 'team.dashboard',
-        parameters: { team: 1 }
+        parameters: { team: 1 },
     });
 });
 ```
